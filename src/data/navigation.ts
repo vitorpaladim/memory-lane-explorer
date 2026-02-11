@@ -7,12 +7,14 @@ export interface NavSection {
 export interface NavGroup {
   label: string;
   path: string;
+  image?: string;
   items: NavItem[];
 }
 
 export interface NavItem {
   label: string;
   path: string;
+  image?: string;
 }
 
 export const atividadesNav: NavSection = {
@@ -22,6 +24,7 @@ export const atividadesNav: NavSection = {
     {
       label: "Vereadores",
       path: "/atividades/vereadores",
+      image: "/placeholder.svg",
       items: [
         { label: "Mesas Diretoras", path: "/atividades/vereadores/mesas-diretoras" },
         { label: "Comissões Permanentes", path: "/atividades/vereadores/comissoes-permanentes" },
@@ -31,6 +34,7 @@ export const atividadesNav: NavSection = {
     {
       label: "Projetos",
       path: "/atividades/projetos",
+      image: "/placeholder.svg",
       items: [
         { label: "Leis", path: "/atividades/projetos/leis" },
         { label: "Leis Complementares", path: "/atividades/projetos/leis-complementares" },
@@ -39,6 +43,7 @@ export const atividadesNav: NavSection = {
     {
       label: "Proposituras",
       path: "/atividades/proposituras",
+      image: "/placeholder.svg",
       items: [
         { label: "Indicações", path: "/atividades/proposituras/indicacoes" },
         { label: "Pedidos de Informação", path: "/atividades/proposituras/pedidos-informacao" },
@@ -49,6 +54,7 @@ export const atividadesNav: NavSection = {
     {
       label: "Atos Oficiais da Câmara",
       path: "/atividades/atos-oficiais",
+      image: "/placeholder.svg",
       items: [
         { label: "Atos do Presidente", path: "/atividades/atos-oficiais/atos-presidente" },
         { label: "Atos da Mesa", path: "/atividades/atos-oficiais/atos-mesa" },
@@ -60,6 +66,7 @@ export const atividadesNav: NavSection = {
     {
       label: "Comissões",
       path: "/atividades/comissoes",
+      image: "/placeholder.svg",
       items: [
         { label: "Comissões de Estudo", path: "/atividades/comissoes/estudo" },
         { label: "Comissões de Inquérito", path: "/atividades/comissoes/inquerito" },
@@ -75,13 +82,15 @@ export const bibliotecaNav: NavSection = {
     {
       label: "Livros",
       path: "/biblioteca/livros",
+      image: "/placeholder.svg",
       items: [
-        { label: "Ebooks", path: "/biblioteca/livros/ebooks" },
+        { label: "Ebooks", path: "/biblioteca/livros/ebooks", image: "/placeholder.svg" },
       ],
     },
     {
       label: "Publicações da Câmara",
       path: "/biblioteca/publicacoes",
+      image: "/placeholder.svg",
       items: [
         { label: "Cadernos de Memória", path: "/biblioteca/publicacoes/cadernos-memoria" },
         { label: "Relatórios da Comissão", path: "/biblioteca/publicacoes/relatorios-comissao" },
@@ -92,6 +101,7 @@ export const bibliotecaNav: NavSection = {
     {
       label: "Documentos Históricos",
       path: "/biblioteca/documentos-historicos",
+      image: "/placeholder.svg",
       items: [
         { label: "Império e República Velha", path: "/biblioteca/documentos-historicos/imperio-republica-velha" },
         { label: "Leis Municipais", path: "/biblioteca/documentos-historicos/leis-municipais" },

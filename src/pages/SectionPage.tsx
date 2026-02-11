@@ -45,30 +45,63 @@ const SectionPage = ({ section }: SectionPageProps) => {
 
             <div className="flex-1">
               {currentRoute ? (
-                <div className="rounded-lg border border-border bg-card p-8 text-center">
-                  <p className="text-muted-foreground">
-                    Conteúdo de <span className="font-semibold text-foreground">{title}</span> será adicionado em breve.
-                  </p>
-                </div>
+                (() => {
+                  // Check if this route is for a group or item
+                  const currentGroup = navData.groups.find((g) => g.path === location.pathname);
+                  const currentItem = navData.groups
+                    .flatMap((g) => g.items)
+                    .find((item) => item.path === location.pathname);
+                  const image = currentGroup?.image || currentItem?.image;
+
+                  return (
+                    <div className="space-y-6">
+                      {image && (
+                        <div className="rounded-lg overflow-hidden border border-border bg-muted aspect-video max-h-64">
+                          <img
+                            src={image}
+                            alt={title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="rounded-lg border border-border bg-card p-8 text-center">
+                        <p className="text-muted-foreground">
+                          Conteúdo de <span className="font-semibold text-foreground">{title}</span> será adicionado em breve.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()
               ) : (
-                /* Section landing: show all groups as cards */
+                /* Section landing: show all groups as cards with images */
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {navData.groups.map((group) => (
-                    <div key={group.path} className="rounded-lg border border-border bg-card p-6">
-                      <h3 className="font-serif font-bold text-lg mb-3">{group.label}</h3>
-                      <ul className="space-y-1">
-                        {group.items.map((item) => (
-                          <li key={item.path}>
-                            <Link
-                              to={item.path}
-                              className="text-sm text-muted-foreground hover:text-accent transition-colors flex items-center gap-1"
-                            >
-                              <ChevronRight className="h-3 w-3" />
-                              {item.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                    <div key={group.path} className="rounded-lg border border-border bg-card overflow-hidden">
+                      {group.image && (
+                        <div className="aspect-video bg-muted">
+                          <img
+                            src={group.image}
+                            alt={group.label}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="p-6">
+                        <h3 className="font-serif font-bold text-lg mb-3">{group.label}</h3>
+                        <ul className="space-y-1">
+                          {group.items.map((item) => (
+                            <li key={item.path}>
+                              <Link
+                                to={item.path}
+                                className="text-sm text-muted-foreground hover:text-accent transition-colors flex items-center gap-1"
+                              >
+                                <ChevronRight className="h-3 w-3" />
+                                {item.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   ))}
                 </div>
