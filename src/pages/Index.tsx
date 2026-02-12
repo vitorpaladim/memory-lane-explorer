@@ -1,93 +1,53 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, FileText, Download, Eye, Calendar, ArrowRight, Landmark, BookOpen, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowRight } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import { highlights, timelinePeriods, documents, activities } from "@/data/mockData";
+import { highlights, timelinePeriods } from "@/data/mockData";
+import { atividadesNav, bibliotecaNav } from "@/data/navigation";
 import { useState } from "react";
 
 const Index = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeTimeline, setActiveTimeline] = useState<string | null>(null);
 
-  const nextSlide = () => setCarouselIndex((i) => (i + 1) % highlights.length);
-  const prevSlide = () => setCarouselIndex((i) => (i - 1 + highlights.length) % highlights.length);
+  const visibleHighlights = 3;
+  const maxIndex = Math.max(0, highlights.length - visibleHighlights);
+  const nextSlide = () => setCarouselIndex((i) => Math.min(i + 1, maxIndex));
+  const prevSlide = () => setCarouselIndex((i) => Math.max(i - 1, 0));
 
   return (
     <Layout>
-      {/* Hero */}
+      {/* Hero — full-width banner style like Butantan */}
       <section className="relative bg-primary text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
-        </div>
-        <div className="container mx-auto px-4 py-20 md:py-28 relative">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-light text-accent text-sm font-medium">
-              <Landmark className="h-4 w-4" />
-              Patrimônio Histórico Municipal
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
+        <div className="container mx-auto px-4 py-24 md:py-32 relative">
+          <div className="max-w-2xl space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight">
               Centro de Memórias da Cidade
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-primary-foreground/70 leading-relaxed max-w-xl">
               Preservando e compartilhando a história da nossa cidade através de um acervo digital acessível a todos os cidadãos.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="flex flex-wrap gap-4 pt-2">
               <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold">
                 <Link to="/biblioteca"><BookOpen className="h-5 w-5 mr-2" /> Explorar Acervo</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-navy-light">
-                <Link to="/linha-do-tempo"><Clock className="h-5 w-5 mr-2" /> Ver Linha do Tempo</Link>
+                <Link to="/linha-do-tempo"><Clock className="h-5 w-5 mr-2" /> Linha do Tempo</Link>
               </Button>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Carousel */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Destaques</h2>
-          <div className="relative">
-            <div className="overflow-hidden rounded-lg">
-              <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${carouselIndex * 100}%)` }}>
-                {highlights.map((h) => (
-                  <div key={h.id} className="w-full flex-shrink-0 px-2">
-                    <Card className="overflow-hidden border-border/50">
-                      <div className="md:flex">
-                        <div className="md:w-1/3 bg-muted flex items-center justify-center p-8">
-                          <Landmark className="h-20 w-20 text-muted-foreground/30" />
-                        </div>
-                        <div className="md:w-2/3 p-6 md:p-8 flex flex-col justify-center">
-                          <h3 className="text-xl font-serif font-bold mb-3">{h.title}</h3>
-                          <p className="text-muted-foreground mb-4 leading-relaxed">{h.description}</p>
-                          <Button asChild variant="outline" className="self-start">
-                            <Link to={h.link}>Ver mais <ArrowRight className="h-4 w-4 ml-1" /></Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <Button variant="outline" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 shadow" onClick={prevSlide} aria-label="Anterior">
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 shadow" onClick={nextSlide} aria-label="Próximo">
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-            <div className="flex justify-center gap-2 mt-4">
-              {highlights.map((_, i) => (
-                <button key={i} onClick={() => setCarouselIndex(i)} className={`h-2 rounded-full transition-all ${i === carouselIndex ? "w-8 bg-accent" : "w-2 bg-border"}`} aria-label={`Slide ${i + 1}`} />
-              ))}
-            </div>
+        {/* Decorative image placeholder */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 hidden lg:flex items-center justify-center">
+          <div className="w-64 h-64 rounded-lg bg-primary-foreground/5 border border-primary-foreground/10 flex items-center justify-center">
+            <span className="text-primary-foreground/30 text-sm">Imagem</span>
           </div>
         </div>
       </section>
 
-      {/* Timeline Preview */}
+      {/* Timeline Section */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Linha do Tempo</h2>
@@ -108,7 +68,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Content below timeline */}
           {activeTimeline && (() => {
             const period = timelinePeriods.find((p) => p.id === activeTimeline);
             if (!period) return null;
@@ -117,7 +76,7 @@ const Index = () => {
                 <div className="flex-1 space-y-3">
                   <h3 className="text-2xl font-serif font-bold text-foreground">{period.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p>
                 </div>
                 <div className="w-full md:w-80 shrink-0 aspect-[4/3] rounded-lg bg-muted border border-border flex items-center justify-center">
@@ -129,79 +88,126 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Library Preview */}
+      {/* Atividade Parlamentar Section — card grid like reference */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-serif font-bold text-foreground">Biblioteca Digital</h2>
-            <Button asChild variant="link" className="text-accent">
-              <Link to="/biblioteca">Ver todos <ArrowRight className="h-4 w-4 ml-1" /></Link>
-            </Button>
-          </div>
+          <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Atividade Parlamentar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {documents.slice(0, 6).map((doc) => (
-              <Card key={doc.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-md bg-destructive/10">
-                      <FileText className="h-6 w-6 text-destructive" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-base leading-tight line-clamp-2">{doc.title}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Calendar className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">{new Date(doc.date).toLocaleDateString("pt-BR")}</span>
-                      </div>
-                    </div>
+            {atividadesNav.groups.map((group) => (
+              <Card key={group.path} className="overflow-hidden hover:shadow-lg transition-shadow">
+                {group.image && (
+                  <div className="aspect-video bg-muted">
+                    <img src={group.image} alt={group.label} className="w-full h-full object-cover" />
                   </div>
-                </CardHeader>
-                <CardContent className="pb-3">
-                  <Badge variant="secondary" className="text-xs">{doc.category}</Badge>
+                )}
+                <CardContent className="p-5 space-y-3">
+                  <h3 className="font-serif font-bold text-lg">
+                    <Link to={group.path} className="hover:text-accent transition-colors">{group.label}</Link>
+                  </h3>
+                  <ul className="space-y-1">
+                    {group.items.map((item) => (
+                      <li key={item.path}>
+                        <Link to={item.path} className="text-sm text-muted-foreground hover:text-accent transition-colors">
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
-                <CardFooter className="gap-2">
-                  <Button asChild size="sm" variant="outline" className="flex-1">
-                    <Link to={`/biblioteca/${doc.id}`}><Eye className="h-3 w-3 mr-1" /> Ver</Link>
-                  </Button>
-                  <Button size="sm" variant="ghost" className="text-muted-foreground">
-                    <Download className="h-3 w-3" />
-                  </Button>
-                </CardFooter>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Activities Preview */}
+      {/* Biblioteca Section */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-serif font-bold text-foreground">Atividades Parlamentares</h2>
-            <Button asChild variant="link" className="text-accent">
-              <Link to="/atividades">Ver todas <ArrowRight className="h-4 w-4 ml-1" /></Link>
-            </Button>
-          </div>
-          <div className="space-y-4">
-            {activities.slice(0, 3).map((act) => (
-              <Card key={act.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="flex items-center gap-3 sm:w-48 shrink-0">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">{new Date(act.date).toLocaleDateString("pt-BR")}</span>
-                    <Badge variant={act.type === "sessão" ? "default" : act.type === "projeto" ? "secondary" : "outline"} className="text-xs capitalize">
-                      {act.type}
-                    </Badge>
+          <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Biblioteca</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bibliotecaNav.groups.map((group) => (
+              <Card key={group.path} className="overflow-hidden hover:shadow-lg transition-shadow">
+                {group.image && (
+                  <div className="aspect-video bg-muted">
+                    <img src={group.image} alt={group.label} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-sm">{act.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{act.description}</p>
-                  </div>
-                  <Button asChild size="sm" variant="ghost">
-                    <Link to="/atividades">Ver <ArrowRight className="h-3 w-3 ml-1" /></Link>
-                  </Button>
+                )}
+                <CardContent className="p-5 space-y-3">
+                  <h3 className="font-serif font-bold text-lg">
+                    <Link to={group.path} className="hover:text-accent transition-colors">{group.label}</Link>
+                  </h3>
+                  <ul className="space-y-1">
+                    {group.items.map((item) => (
+                      <li key={item.path}>
+                        <Link to={item.path} className="text-sm text-muted-foreground hover:text-accent transition-colors">
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Destaques Carousel */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Destaques</h2>
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 gap-6"
+                style={{ transform: `translateX(-${carouselIndex * (100 / visibleHighlights)}%)` }}
+              >
+                {highlights.map((h) => (
+                  <Card key={h.id} className="min-w-[calc(33.333%-1rem)] flex-shrink-0 overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-sm">Imagem</span>
+                    </div>
+                    <CardContent className="p-5 space-y-2">
+                      <h3 className="font-serif font-bold">{h.title}</h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">{h.description}</p>
+                      <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                        <Link to={h.link}>Ver Mais</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 rounded-full bg-background shadow-md"
+              onClick={prevSlide}
+              disabled={carouselIndex === 0}
+              aria-label="Anterior"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 rounded-full bg-background shadow-md"
+              onClick={nextSlide}
+              disabled={carouselIndex >= maxIndex}
+              aria-label="Próximo"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+            <div className="flex justify-center gap-2 mt-6">
+              {highlights.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCarouselIndex(Math.min(i, maxIndex))}
+                  className={`h-2.5 w-2.5 rounded-full transition-all ${i === carouselIndex ? "bg-accent scale-125" : "bg-border"}`}
+                  aria-label={`Slide ${i + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
