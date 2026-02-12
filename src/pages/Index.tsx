@@ -90,12 +90,7 @@ const Index = () => {
       {/* Timeline Preview */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-serif font-bold text-foreground">Linha do Tempo</h2>
-            <Button asChild variant="link" className="text-accent">
-              <Link to="/linha-do-tempo">Ver completa <ArrowRight className="h-4 w-4 ml-1" /></Link>
-            </Button>
-          </div>
+          <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Linha do Tempo</h2>
           <div className="relative">
             <div className="absolute top-6 left-0 right-0 h-0.5 bg-border" />
             <div className="flex overflow-x-auto gap-0 pb-4 scrollbar-hide">
@@ -108,20 +103,29 @@ const Index = () => {
                   <div className={`w-4 h-4 rounded-full border-2 transition-colors z-10 ${activeTimeline === p.id ? "bg-accent border-accent" : "bg-background border-primary group-hover:border-accent"}`} />
                   <span className={`mt-2 text-sm font-semibold ${activeTimeline === p.id ? "text-accent" : "text-foreground"}`}>{p.decade}</span>
                   <span className="text-xs text-muted-foreground">{p.title}</span>
-                  {activeTimeline === p.id && (
-                    <Card className="absolute top-20 left-1/2 -translate-x-1/2 w-64 z-20 shadow-lg">
-                      <CardContent className="p-4">
-                        <p className="text-sm text-muted-foreground mb-3">{p.summary}</p>
-                        <Button asChild size="sm" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                          <Link to="/biblioteca">Ver documentos ({p.documentsCount})</Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  )}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Content below timeline */}
+          {activeTimeline && (() => {
+            const period = timelinePeriods.find((p) => p.id === activeTimeline);
+            if (!period) return null;
+            return (
+              <div className="mt-8 flex flex-col md:flex-row gap-8 items-start">
+                <div className="flex-1 space-y-3">
+                  <h3 className="text-2xl font-serif font-bold text-foreground">{period.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                  </p>
+                </div>
+                <div className="w-full md:w-80 shrink-0 aspect-[4/3] rounded-lg bg-muted border border-border flex items-center justify-center">
+                  <span className="text-muted-foreground text-sm">Imagem</span>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </section>
 
