@@ -11,10 +11,17 @@ const Index = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeTimeline, setActiveTimeline] = useState<string | null>(null);
 
-  const visibleHighlights = 3;
-  const maxIndex = Math.max(0, highlights.length - visibleHighlights);
-  const nextSlide = () => setCarouselIndex((i) => Math.min(i + 1, maxIndex));
+  const nextSlide = () => setCarouselIndex((i) => Math.min(i + 1, highlights.length - 1));
   const prevSlide = () => setCarouselIndex((i) => Math.max(i - 1, 0));
+
+  const goTimelinePrev = () => {
+    const idx = timelinePeriods.findIndex((p) => p.id === activeTimeline);
+    if (idx > 0) setActiveTimeline(timelinePeriods[idx - 1].id);
+  };
+  const goTimelineNext = () => {
+    const idx = timelinePeriods.findIndex((p) => p.id === activeTimeline);
+    if (idx < timelinePeriods.length - 1) setActiveTimeline(timelinePeriods[idx + 1].id);
+  };
 
   return (
     <Layout>
@@ -51,21 +58,45 @@ const Index = () => {
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-serif font-bold text-foreground mb-8 text-center">Linha do Tempo</h2>
-          <div className="relative">
-            <div className="absolute top-6 left-0 right-0 h-0.5 bg-border" />
-            <div className="flex overflow-x-auto gap-0 pb-4 scrollbar-hide">
-              {timelinePeriods.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setActiveTimeline(activeTimeline === p.id ? null : p.id)}
-                  className="flex flex-col items-center min-w-[120px] relative pt-0 group"
-                >
-                  <div className={`w-4 h-4 rounded-full border-2 transition-colors z-10 ${activeTimeline === p.id ? "bg-accent border-accent" : "bg-background border-primary group-hover:border-accent"}`} />
-                  <span className={`mt-2 text-sm font-semibold ${activeTimeline === p.id ? "text-accent" : "text-foreground"}`}>{p.decade}</span>
-                  <span className="text-xs text-muted-foreground">{p.title}</span>
-                </button>
-              ))}
+          <div className="relative flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full shrink-0"
+              onClick={goTimelinePrev}
+              disabled={!activeTimeline || timelinePeriods.findIndex((p) => p.id === activeTimeline) <= 0}
+              aria-label="Período anterior"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+
+            <div className="flex-1 relative">
+              <div className="absolute top-6 left-0 right-0 h-0.5 bg-border" />
+              <div className="flex overflow-x-auto gap-0 pb-4 scrollbar-hide">
+                {timelinePeriods.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setActiveTimeline(activeTimeline === p.id ? null : p.id)}
+                    className="flex flex-col items-center min-w-[120px] relative pt-0 group"
+                  >
+                    <div className={`w-4 h-4 rounded-full border-2 transition-colors z-10 ${activeTimeline === p.id ? "bg-accent border-accent" : "bg-background border-primary group-hover:border-accent"}`} />
+                    <span className={`mt-2 text-sm font-semibold ${activeTimeline === p.id ? "text-accent" : "text-foreground"}`}>{p.decade}</span>
+                    <span className="text-xs text-muted-foreground">{p.title}</span>
+                  </button>
+                ))}
+              </div>
             </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full shrink-0"
+              onClick={goTimelineNext}
+              disabled={!activeTimeline || timelinePeriods.findIndex((p) => p.id === activeTimeline) >= timelinePeriods.length - 1}
+              aria-label="Próximo período"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
           </div>
 
           {activeTimeline && (() => {
@@ -159,29 +190,33 @@ const Index = () => {
           <div className="relative">
             <div className="overflow-hidden">
               <div
-                className="flex transition-transform duration-500 gap-6"
-                style={{ transform: `translateX(-${carouselIndex * (100 / visibleHighlights)}%)` }}
+                className="flex transition-transform duration-500"
+                style={{ transform: `translateX(-${carouselIndex * 100}%)` }}
               >
                 {highlights.map((h) => (
-                  <Card key={h.id} className="min-w-[calc(33.333%-1rem)] flex-shrink-0 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="aspect-video bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground text-sm">Imagem</span>
-                    </div>
-                    <CardContent className="p-5 space-y-2">
-                      <h3 className="font-serif font-bold">{h.title}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2">{h.description}</p>
-                      <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                        <Link to={h.link}>Ver Mais</Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
+                  <div key={h.id} className="w-full flex-shrink-0 px-2">
+                    <Card className="overflow-hidden">
+                      <div className="md:flex">
+                        <div className="md:w-1/3 aspect-video md:aspect-auto bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground text-sm">Imagem</span>
+                        </div>
+                        <CardContent className="md:w-2/3 p-6 md:p-8 flex flex-col justify-center space-y-3">
+                          <h3 className="text-xl font-serif font-bold">{h.title}</h3>
+                          <p className="text-muted-foreground leading-relaxed">{h.description}</p>
+                          <Button asChild size="sm" className="self-start bg-accent text-accent-foreground hover:bg-accent/90">
+                            <Link to={h.link}>Ver Mais</Link>
+                          </Button>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  </div>
                 ))}
               </div>
             </div>
             <Button
               variant="outline"
               size="icon"
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 rounded-full bg-background shadow-md"
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 shadow-md"
               onClick={prevSlide}
               disabled={carouselIndex === 0}
               aria-label="Anterior"
@@ -191,9 +226,9 @@ const Index = () => {
             <Button
               variant="outline"
               size="icon"
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 rounded-full bg-background shadow-md"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 shadow-md"
               onClick={nextSlide}
-              disabled={carouselIndex >= maxIndex}
+              disabled={carouselIndex >= highlights.length - 1}
               aria-label="Próximo"
             >
               <ChevronRight className="h-5 w-5" />
@@ -202,7 +237,7 @@ const Index = () => {
               {highlights.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCarouselIndex(Math.min(i, maxIndex))}
+                  onClick={() => setCarouselIndex(i)}
                   className={`h-2.5 w-2.5 rounded-full transition-all ${i === carouselIndex ? "bg-accent scale-125" : "bg-border"}`}
                   aria-label={`Slide ${i + 1}`}
                 />
