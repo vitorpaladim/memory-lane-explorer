@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
 import type { NavSection } from "@/data/navigation";
 
 interface SectionSidebarProps {
@@ -9,9 +11,35 @@ interface SectionSidebarProps {
 
 const SectionSidebar = ({ section }: SectionSidebarProps) => {
   const location = useLocation();
+  const [search, setSearch] = useState("");
+
+  const filteredGroups = section.groups
+    .map((group) => {
+      if (!search) return group;
+      const matchGroup = group.label.toLowerCase().includes(search.toLowerCase());
+      const filteredItems = group.items.filter((item) =>
+        item.label.toLowerCase().includes(search.toLowerCase())
+      );
+      if (matchGroup) return group;
+      if (filteredItems.length > 0) return { ...group, items: filteredItems };
+      return null;
+    })
+    .filter(Boolean) as typeof section.groups;
 
   return (
-    <aside className="lg:w-64 shrink-0 mb-8 lg:mb-0">
+    <aside className="lg:w-64 shrink-0 mb-8 lg:mb-0 space-y-4">
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Buscar seção..."
+          className="pl-9"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {/* Navigation */}
       <nav className="space-y-1" aria-label={`Navegação ${section.label}`}>
         <Link
           to={section.path}
@@ -24,11 +52,11 @@ const SectionSidebar = ({ section }: SectionSidebarProps) => {
           {section.label}
         </Link>
 
-        {section.groups.map((group) => {
+        {filteredGroups.map((group) => {
           const isGroupActive = location.pathname.startsWith(group.path);
 
           return (
-            <Collapsible key={group.path} defaultOpen={isGroupActive}>
+            <Collapsible key={group.path} defaultOpen={isGroupActive || !!search}>
               <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-muted text-left">
                 <span className={isGroupActive ? "text-accent font-semibold" : "text-foreground"}>
                   {group.label}
@@ -55,6 +83,10 @@ const SectionSidebar = ({ section }: SectionSidebarProps) => {
             </Collapsible>
           );
         })}
+
+        {filteredGroups.length === 0 && (
+          <p className="px-3 py-2 text-sm text-muted-foreground">Nenhum resultado encontrado.</p>
+        )}
       </nav>
     </aside>
   );
