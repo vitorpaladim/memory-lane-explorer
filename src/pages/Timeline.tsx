@@ -50,7 +50,7 @@ const Timeline = () => {
                   <button
                     key={p.id}
                     onClick={() => setActivePeriod(p.id)}
-                    className="flex flex-col items-center min-w-[140px] relative group py-1"
+                    className="flex flex-col items-center min-w-[180px] relative group py-1"
                   >
                     <span className={`text-sm font-medium mb-1 ${activePeriod === p.id ? "text-accent" : "text-muted-foreground"}`}>
                       {p.decade}
