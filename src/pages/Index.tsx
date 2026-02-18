@@ -77,7 +77,7 @@ const Index = () => {
                   <button
                     key={p.id}
                     onClick={() => setActiveTimeline(activeTimeline === p.id ? null : p.id)}
-                    className="flex flex-col items-center min-w-[120px] relative pt-0 group"
+                    className="flex flex-col items-center min-w-[160px] relative pt-0 group"
                   >
                     <div className={`w-4 h-4 rounded-full border-2 transition-colors z-10 ${activeTimeline === p.id ? "bg-accent border-accent" : "bg-background border-primary group-hover:border-accent"}`} />
                     <span className={`mt-2 text-sm font-semibold ${activeTimeline === p.id ? "text-accent" : "text-foreground"}`}>{p.decade}</span>
