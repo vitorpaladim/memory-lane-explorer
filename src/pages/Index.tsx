@@ -72,7 +72,7 @@ const Index = () => {
 
             <div className="flex-1 relative">
               <div className="absolute top-6 left-0 right-0 h-0.5 bg-border" />
-              <div className="flex overflow-x-auto gap-0 pb-4 scrollbar-hide">
+              <div className="flex overflow-x-auto justify-between pb-4 scrollbar-hide">
                 {timelinePeriods.map((p) => (
                   <button
                     key={p.id}
