@@ -57,15 +57,15 @@ const Header = () => {
               onMouseEnter={() => setOpenDropdown(section.path)}
               onMouseLeave={() => setOpenDropdown(null)}
             >
-              <Link
-                to={section.path}
+              <button
+                onClick={() => setOpenDropdown(openDropdown === section.path ? null : section.path)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-navy-light inline-flex items-center gap-1 ${
                   isActive(section.path) ? "bg-navy-light text-accent" : "text-primary-foreground/80"
                 }`}
               >
                 {section.label}
-                <ChevronDown className="h-3 w-3" />
-              </Link>
+                <ChevronDown className={`h-3 w-3 transition-transform ${openDropdown === section.path ? "rotate-180" : ""}`} />
+              </button>
 
               {openDropdown === section.path && (
                 <div className="absolute top-full left-0 mt-0 pt-1 z-50">
